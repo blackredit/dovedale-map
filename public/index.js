@@ -199,15 +199,15 @@ const worldToCanvas = (worldX, worldY) => {
 };
 
 function drawRoundedRect(context, x, y, width, height, radius) {
-  if (width < 2 * radius) radius = width / 2;
-  if (height < 2 * radius) radius = height / 2;
-  context.beginPath();
-  context.moveTo(x + radius, y);
-  context.arcTo(x + width, y, x + width, y + height, radius);
-  context.arcTo(x + width, y + height, x, y + height, radius);
-  context.arcTo(x, y + height, x, y, radius);
-  context.arcTo(x, y, x + width, y, radius);
-  context.closePath();
+	if (width < 2 * radius) radius = width / 2;
+	if (height < 2 * radius) radius = height / 2;
+	context.beginPath();
+	context.moveTo(x + radius, y);
+	context.arcTo(x + width, y, x + width, y + height, radius);
+	context.arcTo(x + width, y + height, x, y + height, radius);
+	context.arcTo(x, y + height, x, y, radius);
+	context.arcTo(x, y, x + width, y, radius);
+	context.closePath();
 }
 
 // Transform Tracking
@@ -436,24 +436,24 @@ let resizeTimeout = null;
 const handleWindowResize = () => {
 
 	if (resizeTimeout) {
-        clearTimeout(resizeTimeout);
-    }
+		clearTimeout(resizeTimeout);
+	}
 
-    resizeTimeout = setTimeout(() => {
-        const currentTransform = context.getTransform();
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        context.setTransform(currentTransform);
-        drawScene();
-    }, 16);
-	
+	resizeTimeout = setTimeout(() => {
+		const currentTransform = context.getTransform();
+		canvas.width = window.innerWidth;
+		canvas.height = window.innerHeight;
+		context.setTransform(currentTransform);
+		drawScene();
+	}, 16);
+
 	drawScene();
 };
 
 const cleanupStaleServers = () => {
 	const now = Date.now();
 	let hasStaleServers = false;
-	
+
 	for (const [jobId, serverInfo] of Object.entries(state.serverData)) {
 		if (now - serverInfo.lastUpdate > STALE_SERVER_TIMEOUT) {
 			console.log(`Removing stale server: ${jobId}`);
@@ -461,7 +461,7 @@ const cleanupStaleServers = () => {
 			hasStaleServers = true;
 		}
 	}
-	
+
 	if (hasStaleServers) {
 		updateServerList();
 		drawScene();
@@ -494,8 +494,8 @@ const createWebSocket = () => {
 		state.ws.close();
 		state.ws = null;
 	}
-	
-	state.ws = new WebSocket(`wss://${window.location.host}/ws`);
+
+	state.ws = new WebSocket((location.protocol == "http:" ? "ws://" : "wss://") + `${window.location.host}/ws`);
 
 	state.ws.addEventListener("open", () => {
 		console.log("WebSocket connected");
@@ -618,7 +618,7 @@ const attemptReconnect = () => {
 	if (state.ws && state.ws.readyState !== WebSocket.CLOSED) {
 		state.ws.close();
 	}
-	
+
 	createWebSocket();
 };
 
@@ -639,7 +639,7 @@ const updateServerList = (data = null) => {
 	// Only process player data if data is provided
 	if (data?.players) {
 		const playersArray = Array.isArray(data.players) ? data.players : [];
-		
+
 		// Normalize train data
 		playersArray.forEach((player) => {
 			if (player.trainData && !Array.isArray(player.trainData)) {
@@ -647,7 +647,7 @@ const updateServerList = (data = null) => {
 				if (typeof td === "object" && td !== null) {
 					player.trainData = [
 						td.destination || "Unknown",
-						td.class || "Unknown", 
+						td.class || "Unknown",
 						td.headcode || "----",
 						td.headcodeClass || "",
 					];
@@ -988,7 +988,7 @@ elements.reconnectBtn.addEventListener("click", () => {
 		clearTimeout(state.reconnectTimeout);
 		state.reconnectTimeout = null;
 	}
-	
+
 	state.reconnectAttempts = 0;
 	attemptReconnect();
 });
