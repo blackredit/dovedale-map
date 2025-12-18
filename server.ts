@@ -22,7 +22,9 @@ const requestSchema = z.strictObject({
 
 const app = new Hono();
 const PORT = process.env.PORT || 3000;
-const ROBLOX_TOKEN = process.env.ROBLOX_OTHER_KEY || "TEST";
+const ROBLOX_TOKEN = process.env.ROBLOX_OTHER_KEY;
+
+if (!ROBLOX_TOKEN) throw new Error(`Token environment variable is missing`);
 
 app.use("*", serveStatic({ root: "./public" }));
 
