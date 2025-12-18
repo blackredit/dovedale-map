@@ -1,5 +1,9 @@
 # Dovedale Live Map
 
+> [!WARNING]
+> For contributors, update your testing workflows to provide the token in the `Authorization` header with "Bearer TOKEN" instead of the body.
+> The `token` field in the body will no longer be supported soon.
+
 Hosted at [map.dovedale.wiki](https://map.dovedale.wiki), this project aims to provide a near-realtime view of players in [Dovedale Railway](https://play.dovedale.wiki).
 
 Uses Express to host a web server, with Bun as the preferred package manager.
