@@ -68,8 +68,6 @@ app.post("/positions", async (context) => {
 		return context.text("Invalid token", 401);
 	}
 
-	console.log("Received data from Roblox:", result.data);
-
 	webSockets.forEach((webSocket) => {
 		webSocket.send(JSON.stringify(dataToSend));
 	});
