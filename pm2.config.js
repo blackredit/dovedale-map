@@ -1,4 +1,4 @@
-export default {
+module.exports = {
 	name: "dovedale-map",
 	script: "server.ts",
 	interpreter: "bun",
