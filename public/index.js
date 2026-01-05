@@ -312,8 +312,8 @@ const updateTooltip = (player) => {
 		const [destination, trainClass, headcode, trainType] = player.trainData;
 
 		if (destination && destination !== "Unknown" && destinationSection) {
-			const destDiv = destinationSection.querySelector("div");
-			if (destDiv) destDiv.textContent = destination;
+			const destinationDiv = destinationSection.querySelector("div");
+			if (destinationDiv) destinationDiv.textContent = destination;
 			destinationSection.style.display = "flex";
 		} else if (destinationSection) {
 			destinationSection.style.display = "none";
@@ -681,13 +681,16 @@ const updateServerList = (data = null) => {
 };
 
 const drawScene = () => {
-	const transformedP1 = context.transformedPoint(0, 0);
-	const transformedP2 = context.transformedPoint(canvas.width, canvas.height);
+	const transformedPoint1 = context.transformedPoint(0, 0);
+	const transformedPoint2 = context.transformedPoint(
+		canvas.width,
+		canvas.height,
+	);
 	context.clearRect(
-		transformedP1.x,
-		transformedP1.y,
-		transformedP2.x - transformedP1.x,
-		transformedP2.y - transformedP1.y,
+		transformedPoint1.x,
+		transformedPoint1.y,
+		transformedPoint2.x - transformedPoint1.x,
+		transformedPoint2.y - transformedPoint1.y,
 	);
 
 	const mapAspectRatio = MAP_CONFIG.totalWidth / MAP_CONFIG.totalHeight;
@@ -711,26 +714,27 @@ const drawScene = () => {
 	context.imageSmoothingEnabled = false;
 
 	for (let row = 0; row < MAP_CONFIG.rows; row++) {
-		for (let col = 0; col < MAP_CONFIG.columns; col++) {
-			const img = state.mapImages[row]?.[col];
-			if (img?.complete) {
-				const destX = offsetX + col * scaledChunkWidth;
-				const destY = offsetY + row * scaledChunkHeight;
+		for (let column = 0; column < MAP_CONFIG.columns; column++) {
+			const image = state.mapImages[row]?.[column];
+			if (image?.complete) {
+				const destinationX = offsetX + column * scaledChunkWidth;
+				const destinationY = offsetY + row * scaledChunkHeight;
 
 				const overlap = Math.max(0.5, 2 / state.currentScale);
 				const drawWidth =
-					scaledChunkWidth + (col < MAP_CONFIG.columns - 1 ? overlap : 0);
+					scaledChunkWidth +
+					(column < MAP_CONFIG.columns - 1 ? overlap : 0);
 				const drawHeight =
 					scaledChunkHeight + (row < MAP_CONFIG.rows - 1 ? overlap : 0);
 
 				context.drawImage(
-					img,
+					image,
 					0,
 					0,
-					img.width,
-					img.height,
-					destX,
-					destY,
+					image.width,
+					image.height,
+					destinationX,
+					destinationY,
 					drawWidth,
 					drawHeight,
 				);
