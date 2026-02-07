@@ -68,15 +68,11 @@ app.get(
 	}),
 );
 
-app.use("/api/*", async (context, next) => {
+app.get("/api/servers/:jobId/players", async (context) => {
 	const authorizationHeader = context.req.header("Authorization");
 	if (authorizationHeader !== `Bearer ${ROBLOX_TOKEN}`) {
 		return context.text("Invalid token", 401);
 	}
-	await next();
-});
-
-app.get("/api/servers/:jobId/players", async (context) => {
 	const jobId = context.req.param("jobId");
 	return context.json(playersCache.get(jobId));
 });
