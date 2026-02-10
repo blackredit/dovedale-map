@@ -1,7 +1,7 @@
 {
 	"scripts": {
-		"start": "bun run server.js",
-		"dev": "bun run --watch server.js"
+		"start": "bun run server.ts",
+		"dev": "bun run --watch server.ts"
 	},
 	"dependencies": {
 		"hono": "^4.11.0",
