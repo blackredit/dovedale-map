@@ -109,6 +109,7 @@ const elements = {
 	serverSelect: document.getElementById("servers"),
 	connectionPopup: document.getElementById("connectionPopup"),
 	reconnectBtn: document.getElementById("reconnectBtn"),
+	joinBtn: document.getElementById("joinBtn"),
 };
 
 // Application State
@@ -327,12 +328,7 @@ const updateTooltip = (player) => {
 			trainClassSection.style.display = "none";
 		}
 
-		if (
-			headcode &&
-			headcode !== "----" &&
-			headcode !== "" &&
-			headcodeSection
-		) {
+		if (headcode && headcode !== "----" && headcode !== "" && headcodeSection) {
 			const headDiv = headcodeSection.querySelector("div");
 			if (headDiv) headDiv.textContent = headcode;
 			headcodeSection.style.display = "flex";
@@ -481,7 +477,10 @@ const createWebSocket = () => {
 		state.ws = null;
 	}
 
-	state.ws = new WebSocket((location.protocol == "http:" ? "ws://" : "wss://") + `${window.location.host}/api/ws`);
+	state.ws = new WebSocket(
+		(location.protocol == "http:" ? "ws://" : "wss://") +
+			`${window.location.host}/api/ws`,
+	);
 
 	state.ws.addEventListener("open", () => {
 		console.log("WebSocket connected");
@@ -671,6 +670,7 @@ const updateServerList = (data = null) => {
 
 	if (selectedValue !== "all" && !currentServers.includes(selectedValue)) {
 		elements.serverSelect.value = "all";
+		elements.joinBtn.href = "roblox://experiences/start?placeId=12018816388";
 		state.currentServer = "all";
 	} else {
 		elements.serverSelect.value = selectedValue;
@@ -719,8 +719,7 @@ const drawScene = () => {
 
 				const overlap = Math.max(0.5, 2 / state.currentScale);
 				const drawWidth =
-					scaledChunkWidth +
-					(column < MAP_CONFIG.columns - 1 ? overlap : 0);
+					scaledChunkWidth + (column < MAP_CONFIG.columns - 1 ? overlap : 0);
 				const drawHeight =
 					scaledChunkHeight + (row < MAP_CONFIG.rows - 1 ? overlap : 0);
 
@@ -975,6 +974,14 @@ const handleTouchEvents = () => {
 elements.serverSelect.addEventListener("change", () => {
 	state.currentServer = elements.serverSelect.value;
 	drawScene();
+
+	if (elements.serverSelect.value === "all") {
+		elements.joinBtn.href = "roblox://experiences/start?placeId=12018816388";
+	} else {
+		elements.joinBtn.href =
+			"roblox://experiences/start?placeId=12018816388&gameInstanceId=" +
+			elements.serverSelect.value;
+	}
 });
 
 elements.reconnectBtn.addEventListener("click", () => {
