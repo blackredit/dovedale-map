@@ -52,7 +52,19 @@
 
 	<div class="fixed top-2 left-2 flex gap-3 items-center z-20">
 		<select class="bg-zinc-800 px-2 py-1 rounded text-base sm:text-xl font-[Inter]" id="servers"></select>
+		<button id="pipBtn" type="button"
+			class="bg-zinc-800 hover:bg-zinc-700 px-2 py-1 rounded text-base sm:text-xl font-[Inter] transition"
+			title="Toggle Picture-in-Picture mini map">PiP</button>
 		<p id="players" class="hidden">Players: N/A</p>
+	</div>
+
+	<div id="stationPanel"
+		class="fixed top-2 right-2 z-20 bg-zinc-900/95 border border-zinc-700 rounded-2xl p-3 w-[240px] max-h-[45vh] overflow-auto hidden sm:block">
+		<div class="flex items-center justify-between mb-2">
+			<h2 class="text-sm font-semibold">Station Activity</h2>
+			<span id="stationTotal" class="text-xs text-zinc-400">0 tracked</span>
+		</div>
+		<div id="stationList" class="flex flex-col gap-1 text-sm text-zinc-200"></div>
 	</div>
 
 	<div class="fixed top-2 right-2 flex gap-2 sm:hidden z-20">
@@ -113,11 +125,10 @@
 		</a>
 	</div>
 
-
 	<p class="fixed bottom-2 left-3 z-20 text-zinc-500 text-sm hidden sm:block h-auto" id="hover-hint">Hover over a dot
 		to see the player's name</p>
 
-	<script src="index.js?v=22"></script>
+	<script src="index.js?v=31"></script>
 </body>
 
 </html>
