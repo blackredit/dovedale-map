@@ -36,12 +36,23 @@ const app = new Hono();
 const PORT = process.env.PORT || 3000;
 const STALE_SERVER_TIMEOUT = 30_000;
 
+const IS_PRODUCTION = process.env.NODE_ENV === "production";
+
 const ROBLOX_TOKEN = process.env.ROBLOX_OTHER_KEY;
-if (!ROBLOX_TOKEN) throw new Error(`Token environment variable is missing`);
+if (!ROBLOX_TOKEN && IS_PRODUCTION)
+	throw new Error(`Token environment variable is missing`);
+if (!ROBLOX_TOKEN)
+	console.warn(
+		"ROBLOX_OTHER_KEY is missing; protected Roblox endpoints are disabled in local dev.",
+	);
 
 const GET_PLAYERS_API_KEY = process.env.GET_PLAYERS_API_KEY;
-if (!GET_PLAYERS_API_KEY)
+if (!GET_PLAYERS_API_KEY && IS_PRODUCTION)
 	throw new Error(`GET players API key environment variable is missing`);
+if (!GET_PLAYERS_API_KEY)
+	console.warn(
+		"GET_PLAYERS_API_KEY is missing; GET players auth endpoint is disabled in local dev.",
+	);
 
 app.use("*", serveStatic({ root: "./public" }));
 
@@ -69,6 +80,10 @@ app.get(
 );
 
 app.get("/api/servers/:jobId/players", async (context) => {
+	if (!ROBLOX_TOKEN) {
+		return context.text("Server token not configured", 503);
+	}
+
 	const authorizationHeader = context.req.header("Authorization");
 	if (authorizationHeader !== `Bearer ${ROBLOX_TOKEN}`) {
 		return context.text("Invalid token", 401);
@@ -78,6 +93,10 @@ app.get("/api/servers/:jobId/players", async (context) => {
 });
 
 async function positionsApi(context: Context) {
+	if (!ROBLOX_TOKEN) {
+		return context.text("Server token not configured", 503);
+	}
+
 	const result = requestSchema.safeParse(await context.req.json());
 
 	if (!result.success) {
